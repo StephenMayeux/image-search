@@ -15,12 +15,22 @@ router.get('/:term', function(req, res, next) {
   }
 
   var arr = [];
+  var offset = req.query.offset;
 
   search.images(req.params.term, function(err, results) {
-    results.forEach(function(item) {
-      arr.push(new image(item.url, item.sourceUrl, item.title));
-    });
+    if (!offset) {
+      results.forEach(function(item) {
+        arr.push(new image(item.url, item.sourceUrl, item.title));
+      });
       res.send(JSON.stringify(arr, null, 4));
+    } else if (offset <= 50) {
+      for (var x = 0; x < offset; x++) {
+        arr.push(new image(results[x].url, results[x].sourceUrl, results[x].title));
+      }
+      res.send(JSON.stringify(arr, null, 4));
+    } else {
+      res.send('You can view up to 50 image results and no more');
+    }
   });
 });
 
