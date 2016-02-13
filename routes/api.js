@@ -44,4 +44,25 @@ router.get('/:term', function(req, res, next) {
   });
 });
 
+router.get('/view/history', function(req, res, next) {
+
+  var arr = [];
+  function terms(term, when) {
+    this.term = term;
+    this.when = when;
+  }
+
+  Image.findAll({}, function(err, docs) {
+    if (err) throw err;
+    if (!docs.length) {
+      res.send('There is no search history available');
+    } else {
+      docs.forEach(function(item) {
+        arr.push(new terms(item.term, item.when));
+      });
+      res.send(JSON.stringify(arr.reverse(), null, 4));
+    }
+  });
+});
+
 module.exports = router;
