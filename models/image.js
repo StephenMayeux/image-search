@@ -8,8 +8,8 @@ var ImageSchema = mongoose.Schema({
 
 var Image = module.exports = mongoose.model('Image', ImageSchema);
 
-module.exports.saveTerm = function(newTerm, callback) {
-  newTerm.save(callback);
+module.exports.saveImage = function(newImage, callback) {
+  newImage.save(callback);
 };
 
 module.exports.findAll = function(query, callback) {

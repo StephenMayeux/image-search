@@ -2,6 +2,8 @@ var express = require('express');
 var router = express.Router();
 var Search = require('bing.search');
 var util = require('util');
+var moment = require('moment');
+var Image = require('../models/image');
 
 var search = new Search('Lint7Xo+eNkJGnLkg2zgr5DTCL4J0EIzJH1nm5ldizI');
 
@@ -16,6 +18,14 @@ router.get('/:term', function(req, res, next) {
 
   var arr = [];
   var offset = req.query.offset;
+
+  var newImage = new Image({
+    term: req.params.term,
+    when: moment().format('MMMM Do, YYYY, h:mm a')
+  });
+  Image.saveImage(newImage, function(err, docs) {
+    if (err) throw err;
+  });
 
   search.images(req.params.term, function(err, results) {
     if (!offset) {
