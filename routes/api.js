@@ -1,3 +1,4 @@
+// Required Modules
 var express = require('express');
 var router = express.Router();
 var Search = require('bing.search');
@@ -5,11 +6,12 @@ var util = require('util');
 var moment = require('moment');
 var Image = require('../models/image');
 
+// API Token for Bing Search
 var search = new Search('Lint7Xo+eNkJGnLkg2zgr5DTCL4J0EIzJH1nm5ldizI');
 
-/* GET users listing. */
 router.get('/:term', function(req, res, next) {
 
+  // Create new objects to store Bing data
   function image(url, page, text) {
     this.url = url;
     this.page = page;
@@ -19,6 +21,7 @@ router.get('/:term', function(req, res, next) {
   var arr = [];
   var offset = req.query.offset;
 
+  // Save searches to DB & do it before hitting Bing API
   var newImage = new Image({
     term: req.params.term,
     when: moment().format('MMMM Do, YYYY, h:mm a')
@@ -27,6 +30,7 @@ router.get('/:term', function(req, res, next) {
     if (err) throw err;
   });
 
+  // Bing image search API
   search.images(req.params.term, function(err, results) {
     if (!offset) {
       results.forEach(function(item) {
@@ -44,6 +48,7 @@ router.get('/:term', function(req, res, next) {
   });
 });
 
+// View searches that are stored in DB
 router.get('/view/history', function(req, res, next) {
 
   var arr = [];
